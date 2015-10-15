@@ -17,14 +17,28 @@
           </p>
         </div>
         <div class="action clearfix">
-          <%= link_to "" , ownerships_path(asin: item.get('ASIN') , type: "Want") ,
+          <%= if current_user.want?(@item) == false %>
+              <%= link_to "" , ownerships_path(asin: item.get('ASIN') , type: "Want") ,
                       :class => "want-#{item.get('ASIN')} btn-want btn btn-danger btn-sm want",
                       :remote => true,
                       :method => :post %>
-          <%= link_to "" , ownerships_path(asin: item.get('ASIN') , type: "Have") ,
+          <% else %>
+              <%= link_to "" , ownerships_path(asin: item.get('ASIN') , type: "Want") ,
+                      :class => "want-#{item.get('ASIN')} btn-want btn btn-danger btn-sm wanted",
+                      :remote => true,
+                      :method => :delete %>
+          <% end %>
+          <%= if current_user.have?(@item) == false %>
+              <%= link_to "" , ownerships_path(asin: item.get('ASIN') , type: "Have") ,
                       :class => "have-#{item.get('ASIN')} btn-have btn btn-warning btn-sm have",
                       :remote => true,
                       :method => :post %>
+          <% else %>
+              <%= link_to "" , ownerships_path(asin: item.get('ASIN') , type: "Have") ,
+                      :class => "have-#{item.get('ASIN')} btn-have btn btn-warning btn-sm haved",
+                      :remote => true,
+                      :method => :delete %>
+          <% end %>
         </div>
       </div>
     <% end %>
