@@ -1,12 +1,9 @@
 class RankingController < ApplicationController
   def have
-    have = Have.group('item_id').limit(10).order('count_item_id desc').count('item_id').keys
-    @items = Item.find(have)
-    
+    @items = Item.joins("LEFT OUTER JOIN (SELECT COUNT(item_id) AS count_item_id, item_id AS item_id FROM ownerships WHERE type IN ('Have') GROUP BY item_id) rank ON id = rank.item_id").order('count_item_id desc').limit(10)
   end
 
   def want
-    want = Want.group('item_id').limit(10).order('count_item_id desc').count('item_id').keys
-    @items = Item.find(want)
+    @items = Item.joins("LEFT OUTER JOIN (SELECT COUNT(item_id) AS count_item_id, item_id AS item_id FROM ownerships WHERE type IN ('Want') GROUP BY item_id) rank ON id = rank.item_id").order('count_item_id desc').limit(10)
   end
 end
